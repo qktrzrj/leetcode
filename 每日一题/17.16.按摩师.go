@@ -62,10 +62,13 @@ func massage1(nums []int) int {
 
 // 迭代法
 //
-// 在此题中，按摩师有两个选择，工作或者休息，同时按摩师不能连续工作，且绝对不会连续休息超过两次。
+// 在此题中，按摩师有两个选择，工作或者休息，同时按摩师不能连续工作。
 // 那么可以定义work,rest两个变量表示这一次选择工作或者休息的结果
 // 如果第i次选择工作，那么上一次的结果肯定是休息，所以 work = rest + i
 // 如果第i次选择休息，那么取决于上一次是否休息,如果上一次工作则 rest = work,如果上一次休息则 rest = rest
+// 当第i次选择休息时,rest为第i次的最优解,故而rest=max(work,rest)
+// 得出推导公式rest(k) =max(work(k-1),rest(k-1)), work(k-1) = rest(k-2) + nums[k-1]
+// 那么这个问题就可以从末尾开始迭代，求解n的最优解，可以理解为n+1为休息,那么最优解 = max(work(n),rest(n))
 func massage2(nums []int) int {
 	var work, rest int
 	for _, v := range nums {
