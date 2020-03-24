@@ -1,4 +1,4 @@
-package main
+package test_1052_test
 
 import (
 	"fmt"

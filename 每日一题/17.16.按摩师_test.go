@@ -1,4 +1,4 @@
-package main
+package test17_16_test
 
 import (
 	"fmt"
