@@ -2,6 +2,7 @@ package test17_16
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 )
 
@@ -40,53 +41,49 @@ func NewTrie(data rune, level int) *Trie {
 	return &Trie{data: data, level: level}
 }
 
-func insert(text []rune) {
+func insert(text []rune) int {
 	p := RootTrie
-	for _, t := range text {
+	high := 0
+	for i := len(text) - 1; i >= 0; i-- {
+		t := text[i]
 		index := t - 'a'
 		if p.children[index] == nil {
-			node := NewTrie(t, p.level+1)
+			high = p.level + 1
+			node := NewTrie(t, high)
 			p.children[index] = node
 		}
 		p = p.children[index]
 	}
+	if high > 0 {
+		high++
+	}
+	return high
 }
 
-func TrieHigh() int {
-	var sum int
-	var high func(*Trie, int) int
-	high = func(node *Trie, h int) int {
-		allNo := true
-		for _, children := range node.children {
-			if children != nil {
-				h = high(children, children.level)
-				allNo = false
-			}
-		}
-		if allNo {
-			sum += h + 1
-		}
-		return h
-	}
-	high(RootTrie, 0)
-	return sum
+type sortStrings []string
+
+func (s sortStrings) Len() int {
+	return len(s)
 }
 
-func reverse(src []rune) []rune {
-	str := src
-	for from, to := 0, len(str)-1; from < to; from, to = from+1, to-1 {
-		str[from], str[to] = str[to], str[from]
-	}
-	return str
+func (s sortStrings) Less(i, j int) bool {
+	return len(s[i]) < len(s[j])
+}
+
+func (s sortStrings) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
 func minimumLengthEncoding(words []string) int {
-	for _, w := range words {
-		insert(reverse([]rune(w)))
+	min := 0
+	var w sortStrings = words
+	sort.Sort(w)
+	for i := len(w) - 1; i >= 0; i-- {
+		min += insert([]rune(w[i]))
 	}
-	return TrieHigh()
+	return min
 }
 
 func Test_minimumLengthEncoding(t *testing.T) {
-	fmt.Println(minimumLengthEncoding([]string{"t"}))
+	fmt.Println(minimumLengthEncoding([]string{"me", "time"}))
 }
