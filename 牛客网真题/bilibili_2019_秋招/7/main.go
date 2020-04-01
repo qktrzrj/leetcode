@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"sort"
 	"strconv"
@@ -73,7 +74,13 @@ func main() {
 		min := queue[len(queue)-1]
 		queue = queue[:len(queue)-1]
 		if min.x == n-1 && min.y == n-1 {
-			break
+			var result int
+			for min.prev != nil {
+				result += min.w
+				min = min.prev
+			}
+			fmt.Println(result)
+			return
 		}
 		for i := 0; i < 2; i++ {
 			dx := min.x + dir[i][0]
