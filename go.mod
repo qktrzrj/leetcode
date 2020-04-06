@@ -1,3 +1,3 @@
-module github.com/unrotten/leetcode
+module github.com/shyptr/leetcode
 
 go 1.13
